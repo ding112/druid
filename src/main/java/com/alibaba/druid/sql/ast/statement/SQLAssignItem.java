@@ -1,5 +1,5 @@
 /*
- * Copyright 1999-2017 Alibaba Group Holding Ltd.
+ * Copyright 1999-2018 Alibaba Group Holding Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,6 +31,17 @@ public class SQLAssignItem extends SQLObjectImpl implements SQLReplaceable {
     public SQLAssignItem(SQLExpr target, SQLExpr value){
         setTarget(target);
         setValue(value);
+    }
+
+    public SQLAssignItem clone() {
+        SQLAssignItem x = new SQLAssignItem();
+        if (target != null) {
+            x.setTarget(target.clone());
+        }
+        if (value != null) {
+            x.setValue(value.clone());
+        }
+        return x;
     }
 
     public SQLExpr getTarget() {

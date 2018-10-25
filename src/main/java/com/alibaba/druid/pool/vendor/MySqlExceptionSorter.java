@@ -1,5 +1,5 @@
 /*
- * Copyright 1999-2017 Alibaba Group Holding Ltd.
+ * Copyright 1999-2018 Alibaba Group Holding Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,9 @@ package com.alibaba.druid.pool.vendor;
 
 import com.alibaba.druid.pool.ExceptionSorter;
 
+import java.io.IOException;
+import java.net.SocketException;
+import java.net.SocketTimeoutException;
 import java.sql.SQLException;
 import java.sql.SQLRecoverableException;
 import java.util.Properties;
@@ -59,6 +62,8 @@ public class MySqlExceptionSorter implements ExceptionSorter {
                 // Access denied
             case 1142: // ER_TABLEACCESS_DENIED_ERROR
             case 1227: // ER_SPECIFIC_ACCESS_DENIED_ERROR
+
+            case 1290: // ER_OPTION_PREVENTS_STATEMENT
                 return true;
             default:
                 break;
@@ -70,8 +75,7 @@ public class MySqlExceptionSorter implements ExceptionSorter {
         }
         
         String className = e.getClass().getName();
-        if ("com.mysql.jdbc.CommunicationsException".equals(className)
-                || "com.mysql.jdbc.exceptions.jdbc4.CommunicationsException".equals(className)) {
+        if (className.endsWith(".CommunicationsException")) {
             return true;
         }
 
@@ -91,7 +95,20 @@ public class MySqlExceptionSorter implements ExceptionSorter {
                 return true;
             }
         }
-        
+
+        Throwable cause = e.getCause();
+        for (int i = 0; i < 5 && cause != null; ++i) {
+            if (cause instanceof SocketTimeoutException) {
+                return true;
+            }
+
+            className = cause.getClass().getName();
+            if (className.endsWith(".CommunicationsException")) {
+                return true;
+            }
+
+            cause = cause.getCause();
+        }
         
         return false;
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright 1999-2017 Alibaba Group Holding Ltd.
+ * Copyright 1999-2018 Alibaba Group Holding Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -91,5 +91,27 @@ public class OracleUsingIndexClause extends OracleSegmentAttributesImpl implemen
 
     public List<SQLPartition> getLocalPartitionIndex() {
         return localPartitionIndex;
+    }
+
+    public void cloneTo(OracleUsingIndexClause x) {
+        super.cloneTo(x);
+        if (index != null) {
+            x.setIndex(index.clone());
+        }
+        x.enable = enable;
+        x.computeStatistics = computeStatistics;
+        x.reverse = reverse;
+
+        for (SQLPartition p : localPartitionIndex) {
+            SQLPartition p2 = p.clone();
+            p2.setParent(x);
+            x.localPartitionIndex.add(p2);
+        }
+    }
+
+    public OracleUsingIndexClause clone() {
+        OracleUsingIndexClause x = new OracleUsingIndexClause();
+        cloneTo(x);
+        return x;
     }
 }

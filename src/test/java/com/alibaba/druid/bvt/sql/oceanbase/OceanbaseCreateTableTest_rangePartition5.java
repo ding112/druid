@@ -1,5 +1,5 @@
 /*
- * Copyright 1999-2017 Alibaba Group Holding Ltd.
+ * Copyright 1999-2018 Alibaba Group Holding Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -44,8 +44,7 @@ public class OceanbaseCreateTableTest_rangePartition5 extends MysqlTest {
                     + "\n\tid INT,"
                     + "\n\tname VARCHAR(5)"
                     + "\n)"
-                    + "\nPARTITION BY RANGE (id)"
-                    + "\n("
+                    + "\nPARTITION BY RANGE (id) ("
                     + "\n\tPARTITION p1 VALUES LESS THAN (1),"
                     + "\n\tPARTITION p2 VALUES LESS THAN MAXVALUE"
                     + "\n);",
@@ -57,8 +56,7 @@ public class OceanbaseCreateTableTest_rangePartition5 extends MysqlTest {
                     + "\n\tid INT,"
                     + "\n\tname VARCHAR(5)"
                     + "\n)"
-                    + "\npartition by range (id)"
-                    + "\n("
+                    + "\npartition by range (id) ("
                     + "\n\tpartition p1 values less than (1),"
                     + "\n\tpartition p2 values less than maxvalue"
                     + "\n);",

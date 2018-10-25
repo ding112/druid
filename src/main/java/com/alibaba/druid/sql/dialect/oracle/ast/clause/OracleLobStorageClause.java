@@ -1,5 +1,5 @@
 /*
- * Copyright 1999-2017 Alibaba Group Holding Ltd.
+ * Copyright 1999-2018 Alibaba Group Holding Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,6 +27,8 @@ import com.alibaba.druid.sql.dialect.oracle.visitor.OracleASTVisitor;
 import com.alibaba.druid.sql.visitor.SQLASTVisitor;
 
 public class OracleLobStorageClause extends OracleSegmentAttributesImpl implements OracleSQLObject {
+
+    private SQLName             segementName;
 
     private final List<SQLName> items      = new ArrayList<SQLName>();
 
@@ -56,6 +58,7 @@ public class OracleLobStorageClause extends OracleSegmentAttributesImpl implemen
     @Override
     public void accept0(OracleASTVisitor visitor) {
         if (visitor.visit(this)) {
+            acceptChild(visitor, segementName);
             acceptChild(visitor, items);
             acceptChild(visitor, tablespace);
         }
@@ -158,5 +161,13 @@ public class OracleLobStorageClause extends OracleSegmentAttributesImpl implemen
             pctversion.setParent(this);
         }
         this.pctversion = pctversion;
+    }
+
+    public SQLName getSegementName() {
+        return segementName;
+    }
+
+    public void setSegementName(SQLName segementName) {
+        this.segementName = segementName;
     }
 }

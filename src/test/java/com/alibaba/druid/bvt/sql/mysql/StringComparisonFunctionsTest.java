@@ -1,5 +1,5 @@
 /*
- * Copyright 1999-2017 Alibaba Group Holding Ltd.
+ * Copyright 1999-2018 Alibaba Group Holding Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -92,7 +92,7 @@ public class StringComparisonFunctionsTest extends TestCase {
 
         String text = output(stmtList);
 
-        Assert.assertEquals("SELECT 'David!' LIKE 'David_';", text);
+        Assert.assertEquals("SELECT 'David!' LIKE 'David\\\\_';", text);
     }
 
     public void test_6() throws Exception {
@@ -180,7 +180,8 @@ public class StringComparisonFunctionsTest extends TestCase {
 
         String text = output(stmtList);
 
-        Assert.assertEquals("SELECT STRCMP(@s1, @s2), STRCMP(@s3, @s4);", text);
+        Assert.assertEquals("SELECT STRCMP(@s1, @s2)\n" +
+                "\t, STRCMP(@s3, @s4);", text);
     }
 
     public void test_14() throws Exception {

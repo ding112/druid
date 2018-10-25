@@ -1,5 +1,5 @@
 /*
- * Copyright 1999-2017 Alibaba Group Holding Ltd.
+ * Copyright 1999-2018 Alibaba Group Holding Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -47,7 +47,6 @@ public class SQLPartition extends OracleSegmentAttributesImpl implements OracleS
     protected boolean segmentCreationDeferred;
 
     private SQLObject lobStorage;
-
 
     public SQLName getName() {
         return name;
@@ -201,5 +200,54 @@ public class SQLPartition extends OracleSegmentAttributesImpl implements OracleS
 
     public void setSegmentCreationDeferred(boolean segmentCreationDeferred) {
         this.segmentCreationDeferred = segmentCreationDeferred;
+    }
+
+    public SQLPartition clone() {
+        SQLPartition x = new SQLPartition();
+
+        if (name != null) {
+            x.setName(name.clone());
+        }
+
+        if (subPartitionsCount != null) {
+            x.setSubPartitionsCount(subPartitionsCount.clone());
+        }
+
+        for (SQLSubPartition p : subPartitions) {
+            SQLSubPartition p2 = p.clone();
+            p2.setParent(x);
+            x.subPartitions.add(p2);
+        }
+
+        if (values != null) {
+            x.setValues(values.clone());
+        }
+
+        if (dataDirectory != null) {
+            x.setDataDirectory(dataDirectory.clone());
+        }
+        if (indexDirectory != null) {
+            x.setDataDirectory(indexDirectory.clone());
+        }
+        if (maxRows != null) {
+            x.setDataDirectory(maxRows.clone());
+        }
+        if (minRows != null) {
+            x.setDataDirectory(minRows.clone());
+        }
+        if (engine != null) {
+            x.setDataDirectory(engine.clone());
+        }
+        if (comment != null) {
+            x.setDataDirectory(comment.clone());
+        }
+        x.segmentCreationImmediate = segmentCreationImmediate;
+        x.segmentCreationDeferred = segmentCreationDeferred;
+
+        if (lobStorage != null) {
+            x.setLobStorage(lobStorage.clone());
+        }
+
+        return x;
     }
 }

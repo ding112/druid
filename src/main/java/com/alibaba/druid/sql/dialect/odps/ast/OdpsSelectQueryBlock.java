@@ -1,5 +1,5 @@
 /*
- * Copyright 1999-2017 Alibaba Group Holding Ltd.
+ * Copyright 1999-2018 Alibaba Group Holding Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,23 +21,24 @@ import java.util.List;
 import com.alibaba.druid.sql.SQLUtils;
 import com.alibaba.druid.sql.ast.SQLExpr;
 import com.alibaba.druid.sql.ast.SQLHint;
+import com.alibaba.druid.sql.ast.SQLLimit;
 import com.alibaba.druid.sql.ast.SQLOrderBy;
+import com.alibaba.druid.sql.ast.expr.SQLIntegerExpr;
 import com.alibaba.druid.sql.ast.statement.SQLSelectOrderByItem;
 import com.alibaba.druid.sql.ast.statement.SQLSelectQueryBlock;
 import com.alibaba.druid.sql.dialect.odps.visitor.OdpsASTVisitor;
 import com.alibaba.druid.sql.visitor.SQLASTVisitor;
+import com.alibaba.druid.util.JdbcConstants;
 
 public class OdpsSelectQueryBlock extends SQLSelectQueryBlock {
 
     private SQLOrderBy orderBy;
 
-    protected List<SQLHint> hints;
-
-    protected List<SQLExpr>              distributeBy = new ArrayList<SQLExpr>();
-    protected List<SQLSelectOrderByItem> sortBy = new ArrayList<SQLSelectOrderByItem>(2);
-
     public OdpsSelectQueryBlock(){
+        dbType = JdbcConstants.ODPS;
 
+        distributeBy = new ArrayList<SQLExpr>();
+        sortBy = new ArrayList<SQLSelectOrderByItem>(2);
     }
 
     public SQLOrderBy getOrderBy() {
@@ -46,14 +47,6 @@ public class OdpsSelectQueryBlock extends SQLSelectQueryBlock {
 
     public void setOrderBy(SQLOrderBy orderBy) {
         this.orderBy = orderBy;
-    }
-
-    public List<SQLExpr> getDistributeBy() {
-        return distributeBy;
-    }
-
-    public List<SQLSelectOrderByItem> getSortBy() {
-        return sortBy;
     }
 
     @Override
@@ -75,21 +68,6 @@ public class OdpsSelectQueryBlock extends SQLSelectQueryBlock {
             if (other.limit != null) return false;
         } else if (!limit.equals(other.limit)) return false;
         return true;
-    }
-
-    public List<SQLHint> getHintsDirect() {
-        return hints;
-    }
-
-    public List<SQLHint> getHints() {
-        if (hints == null) {
-            hints = new ArrayList<SQLHint>(2);
-        }
-        return hints;
-    }
-
-    public void setHints(List<SQLHint> hints) {
-        this.hints = hints;
     }
 
     @Override
@@ -121,5 +99,13 @@ public class OdpsSelectQueryBlock extends SQLSelectQueryBlock {
 
     public String toString() {
         return SQLUtils.toOdpsString(this);
+    }
+
+    public void limit(int rowCount, int offset) {
+        if (offset > 0) {
+            throw new UnsupportedOperationException("not support offset");
+        }
+
+        setLimit(new SQLLimit(new SQLIntegerExpr(rowCount)));
     }
 }

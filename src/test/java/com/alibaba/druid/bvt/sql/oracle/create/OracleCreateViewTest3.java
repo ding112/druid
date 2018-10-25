@@ -1,5 +1,5 @@
 /*
- * Copyright 1999-2017 Alibaba Group Holding Ltd.
+ * Copyright 1999-2018 Alibaba Group Holding Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -65,8 +65,7 @@ public class OracleCreateViewTest3 extends OracleTest {
 
         Assert.assertEquals(1, statementList.size());
 
-        Assert.assertEquals("CREATE OR REPLACE VIEW \"RMAN\".\"V_001\"\n" +
-                        "(\n" +
+        Assert.assertEquals("CREATE OR REPLACE VIEW \"RMAN\".\"V_001\" (\n" +
                         "\t\"DB_KEY\", \n" +
                         "\t\"DBINC_KEY\", \n" +
                         "\t\"FILE#\", \n" +

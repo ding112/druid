@@ -1,5 +1,5 @@
 /*
- * Copyright 1999-2017 Alibaba Group Holding Ltd.
+ * Copyright 1999-2018 Alibaba Group Holding Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,6 +23,7 @@ import com.alibaba.druid.sql.ast.statement.SQLInsertStatement;
 import com.alibaba.druid.sql.dialect.mysql.visitor.MySqlASTVisitor;
 import com.alibaba.druid.sql.dialect.mysql.visitor.MySqlOutputVisitor;
 import com.alibaba.druid.sql.visitor.SQLASTVisitor;
+import com.alibaba.druid.util.JdbcConstants;
 
 public class MySqlInsertStatement extends SQLInsertStatement {
 
@@ -33,6 +34,25 @@ public class MySqlInsertStatement extends SQLInsertStatement {
     private boolean             rollbackOnFail     = false;
 
     private final List<SQLExpr> duplicateKeyUpdate = new ArrayList<SQLExpr>();
+
+    public MySqlInsertStatement() {
+        dbType = JdbcConstants.MYSQL;
+    }
+
+    public void cloneTo(MySqlInsertStatement x) {
+        super.cloneTo(x);
+        x.lowPriority = lowPriority;
+        x.delayed = delayed;
+        x.highPriority = highPriority;
+        x.ignore = ignore;
+        x.rollbackOnFail = rollbackOnFail;
+
+        for (SQLExpr e : duplicateKeyUpdate) {
+            SQLExpr e2 = e.clone();
+            e2.setParent(x);
+            x.duplicateKeyUpdate.add(e2);
+        }
+    }
 
     public List<SQLExpr> getDuplicateKeyUpdate() {
         return duplicateKeyUpdate;
@@ -83,7 +103,7 @@ public class MySqlInsertStatement extends SQLInsertStatement {
         if (visitor instanceof MySqlASTVisitor) {
             accept0((MySqlASTVisitor) visitor);
         } else {
-            throw new IllegalArgumentException("not support visitor type : " + visitor.getClass().getName());
+            super.accept0(visitor);
         }
     }
 
@@ -101,5 +121,11 @@ public class MySqlInsertStatement extends SQLInsertStatement {
         }
 
         visitor.endVisit(this);
+    }
+
+    public SQLInsertStatement clone() {
+        MySqlInsertStatement x = new MySqlInsertStatement();
+        cloneTo(x);
+        return x;
     }
 }

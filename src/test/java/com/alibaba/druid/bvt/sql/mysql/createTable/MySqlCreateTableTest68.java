@@ -1,5 +1,5 @@
 /*
- * Copyright 1999-2017 Alibaba Group Holding Ltd.
+ * Copyright 1999-2018 Alibaba Group Holding Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -53,8 +53,7 @@ public class MySqlCreateTableTest68 extends MysqlTest {
                     + "\n\tyear_col INT,"
                     + "\n\tsome_data INT"
                     + "\n)"
-                    + "\nPARTITION BY RANGE (year_col)"
-                    + "\n("
+                    + "\nPARTITION BY RANGE (year_col) ("
                     + "\n\tPARTITION p0 VALUES LESS THAN (1991),"
                     + "\n\tPARTITION p1 VALUES LESS THAN (1995),"
                     + "\n\tPARTITION p2 VALUES LESS THAN (1999),"
@@ -70,8 +69,7 @@ public class MySqlCreateTableTest68 extends MysqlTest {
                     + "\n\tyear_col INT,"
                     + "\n\tsome_data INT"
                     + "\n)"
-                    + "\npartition by range (year_col)"
-                    + "\n("
+                    + "\npartition by range (year_col) ("
                     + "\n\tpartition p0 values less than (1991),"
                     + "\n\tpartition p1 values less than (1995),"
                     + "\n\tpartition p2 values less than (1999),"

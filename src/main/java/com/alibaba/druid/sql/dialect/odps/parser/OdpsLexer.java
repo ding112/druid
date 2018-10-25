@@ -1,5 +1,5 @@
 /*
- * Copyright 1999-2017 Alibaba Group Holding Ltd.
+ * Copyright 1999-2018 Alibaba Group Holding Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -47,6 +47,7 @@ public class OdpsLexer extends Lexer {
         map.put("DISTRIBUTE", Token.DISTRIBUTE);
         map.put("TRUE", Token.TRUE);
         map.put("FALSE", Token.FALSE);
+        map.put("RLIKE", Token.RLIKE);
         
         DEFAULT_ODPS_KEYWORDS = new Keywords(map);
     }
@@ -182,6 +183,9 @@ public class OdpsLexer extends Lexer {
     }
 
     public void scanIdentifier() {
+        hash_lower = 0;
+        hash = 0;
+
         final char first = ch;
         
         if (first == '`') {
@@ -197,7 +201,7 @@ public class OdpsLexer extends Lexer {
                     ch = charAt(++pos);
                     break;
                 } else if (ch == EOI) {
-                    throw new ParserException("illegal identifier");
+                    throw new ParserException("illegal identifier. " + info());
                 }
 
                 bufPos++;
@@ -214,7 +218,7 @@ public class OdpsLexer extends Lexer {
 
         final boolean firstFlag = isFirstIdentifierChar(first);
         if (!firstFlag) {
-            throw new ParserException("illegal identifier");
+            throw new ParserException("illegal identifier. " + info());
         }
 
         mark = pos;
@@ -224,6 +228,14 @@ public class OdpsLexer extends Lexer {
             ch = charAt(++pos);
 
             if (!isIdentifierChar(ch)) {
+                if (ch == '{' && charAt(pos - 1) == '$') {
+                    int endIndex = this.text.indexOf('}', pos);
+                    if (endIndex != -1) {
+                        bufPos += (endIndex - pos + 1);
+                        pos = endIndex;
+                        continue;
+                    }
+                }
                 break;
             }
 
@@ -350,12 +362,12 @@ public class OdpsLexer extends Lexer {
         
         super.scanVariable();
     }
-    
+
+    protected void scanVariable_at() {
+        scanVariable();
+    }
+
     protected final void scanString() {
         scanString2();
-    }
-    
-    protected final void scanAlias() {
-        scanAlias2();
     }
 }

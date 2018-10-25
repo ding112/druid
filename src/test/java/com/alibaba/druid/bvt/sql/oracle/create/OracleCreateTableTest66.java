@@ -1,5 +1,5 @@
 /*
- * Copyright 1999-2017 Alibaba Group Holding Ltd.
+ * Copyright 1999-2018 Alibaba Group Holding Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -235,8 +235,7 @@ public class OracleCreateTableTest66 extends OracleTest {
                         "\tFLASH_CACHE DEFAULT\n" +
                         "\tCELL_FLASH_CACHE DEFAULT\n" +
                         ")\n" +
-                        "PARTITION BY RANGE (\"LRSJ\")\n" +
-                        "(\n" +
+                        "PARTITION BY RANGE (\"LRSJ\") (\n" +
                         "\tPARTITION \"T_RANGE_V1\" VALUES LESS THAN (TO_DATE(' 2015-01-01 00:00:00', 'SYYYY-MM-DD HH24:MI:SS', 'NLS_CALENDAR=GREGORIAN'))\n" +
                         "\t\tPCTFREE 80\n" +
                         "\t\tPCTUSED 40\n" +
@@ -393,6 +392,6 @@ public class OracleCreateTableTest66 extends OracleTest {
 
         Assert.assertEquals(52, visitor.getColumns().size());
 
-        Assert.assertTrue(visitor.getColumns().contains(new TableStat.Column("SC_001.TB_001", "ID")));
+        Assert.assertTrue(visitor.containsColumn("SC_001.TB_001", "ID"));
     }
 }

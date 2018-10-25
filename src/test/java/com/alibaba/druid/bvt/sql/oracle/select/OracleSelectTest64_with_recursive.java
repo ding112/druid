@@ -1,5 +1,5 @@
 /*
- * Copyright 1999-2017 Alibaba Group Holding Ltd.
+ * Copyright 1999-2018 Alibaba Group Holding Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -86,7 +86,9 @@ public class OracleSelectTest64_with_recursive extends OracleTest {
                     "\t\tWHERE t2.parent_id = t1.id\n" +
                     "\t)\n" +
                     "\tSEARCH DEPTH FIRST BY id SET order1\n" +
-                    "SELECT id, parent_id, RPAD('.', (lvl - 1) * 2, '.') || id AS tree, lvl\n" +
+                    "SELECT id, parent_id\n" +
+                    "\t, RPAD('.', (lvl - 1) * 2, '.') || id AS tree\n" +
+                    "\t, lvl\n" +
                     "FROM t1\n" +
                     "ORDER BY order1;", text);
         }
@@ -106,7 +108,9 @@ public class OracleSelectTest64_with_recursive extends OracleTest {
                     "\t\twhere t2.parent_id = t1.id\n" +
                     "\t)\n" +
                     "\tsearch DEPTH first by id set order1\n" +
-                    "select id, parent_id, RPAD('.', (lvl - 1) * 2, '.') || id as tree, lvl\n" +
+                    "select id, parent_id\n" +
+                    "\t, RPAD('.', (lvl - 1) * 2, '.') || id as tree\n" +
+                    "\t, lvl\n" +
                     "from t1\n" +
                     "order by order1;", text);
         }

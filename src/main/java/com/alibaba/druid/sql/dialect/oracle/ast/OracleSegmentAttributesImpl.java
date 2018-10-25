@@ -1,5 +1,5 @@
 /*
- * Copyright 1999-2017 Alibaba Group Holding Ltd.
+ * Copyright 1999-2018 Alibaba Group Holding Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -145,5 +145,29 @@ public abstract class OracleSegmentAttributesImpl extends SQLObjectImpl implemen
 
     public void setCompressForOltp(boolean compressForOltp) {
         this.compressForOltp = compressForOltp;
+    }
+
+    public void cloneTo(OracleSegmentAttributesImpl x) {
+        x.pctfree = pctfree;
+        x.pctused = pctused;
+        x.initrans = initrans;
+
+        x.maxtrans = maxtrans;
+        x.pctincrease = pctincrease;
+        x.freeLists = freeLists;
+        x.compress = compress;
+        x.compressLevel = compressLevel;
+        x.compressForOltp = compressForOltp;
+        x.pctthreshold = pctthreshold;
+
+        x.logging = logging;
+
+        if (tablespace != null) {
+            x.setTablespace(tablespace.clone());
+        }
+
+        if (storage != null) {
+            x.setStorage(storage.clone());
+        }
     }
 }

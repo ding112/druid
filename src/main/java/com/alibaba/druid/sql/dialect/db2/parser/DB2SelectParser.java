@@ -1,5 +1,5 @@
 /*
- * Copyright 1999-2017 Alibaba Group Holding Ltd.
+ * Copyright 1999-2018 Alibaba Group Holding Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,20 +16,25 @@
 package com.alibaba.druid.sql.dialect.db2.parser;
 
 import com.alibaba.druid.sql.ast.SQLExpr;
+import com.alibaba.druid.sql.ast.SQLObject;
 import com.alibaba.druid.sql.ast.SQLOrderBy;
 import com.alibaba.druid.sql.ast.SQLSetQuantifier;
 import com.alibaba.druid.sql.ast.statement.SQLSelectQuery;
 import com.alibaba.druid.sql.dialect.db2.ast.stmt.DB2SelectQueryBlock;
 import com.alibaba.druid.sql.dialect.db2.ast.stmt.DB2SelectQueryBlock.Isolation;
-import com.alibaba.druid.sql.parser.ParserException;
-import com.alibaba.druid.sql.parser.SQLExprParser;
-import com.alibaba.druid.sql.parser.SQLSelectParser;
-import com.alibaba.druid.sql.parser.Token;
+import com.alibaba.druid.sql.parser.*;
+import com.alibaba.druid.util.JdbcConstants;
 
 public class DB2SelectParser extends SQLSelectParser {
 
     public DB2SelectParser(SQLExprParser exprParser){
         super(exprParser);
+        dbType = JdbcConstants.DB2;
+    }
+
+    public DB2SelectParser(SQLExprParser exprParser, SQLSelectListCache selectListCache){
+        super(exprParser, selectListCache);
+        dbType = JdbcConstants.DB2;
     }
 
     public DB2SelectParser(String sql){
@@ -41,14 +46,14 @@ public class DB2SelectParser extends SQLSelectParser {
     }
 
     @Override
-    public SQLSelectQuery query() {
+    public SQLSelectQuery query(SQLObject parent, boolean acceptUnion) {
         if (lexer.token() == Token.LPAREN) {
             lexer.nextToken();
 
             SQLSelectQuery select = query();
             accept(Token.RPAREN);
 
-            return queryRest(select);
+            return queryRest(select, acceptUnion);
         }
 
         accept(Token.SELECT);
@@ -72,6 +77,15 @@ public class DB2SelectParser extends SQLSelectParser {
 
         parseSelectList(queryBlock);
 
+        if (lexer.token() == Token.INTO) {
+            lexer.nextToken();
+
+            SQLExpr expr = expr();
+            if (lexer.token() != Token.COMMA) {
+                queryBlock.setInto(expr);
+            }
+        }
+
         parseFrom(queryBlock);
 
         parseWhere(queryBlock);
@@ -79,7 +93,7 @@ public class DB2SelectParser extends SQLSelectParser {
         parseHierachical(queryBlock);
 
         parseGroupBy(queryBlock);
-        
+
         if (lexer.token() == Token.ORDER) {
             SQLOrderBy orderBy = parseOrderBy();
             queryBlock.setOrderBy(orderBy);
@@ -92,33 +106,33 @@ public class DB2SelectParser extends SQLSelectParser {
                 accept(Token.FIRST);
                 SQLExpr first = this.exprParser.primary();
                 queryBlock.setFirst(first);
-                if (identifierEquals("ROW") || identifierEquals("ROWS")) {
+                if (lexer.identifierEquals("ROW") || lexer.identifierEquals("ROWS")) {
                     lexer.nextToken();
                 }
                 accept(Token.ONLY);
                 continue;
             }
-            
+
             if (lexer.token() == Token.WITH) {
                 lexer.nextToken();
-                if (identifierEquals("RR")) {
+                if (lexer.identifierEquals("RR")) {
                     queryBlock.setIsolation(Isolation.RR);
-                } else if (identifierEquals("RS")) {
+                } else if (lexer.identifierEquals("RS")) {
                     queryBlock.setIsolation(Isolation.RS);
-                } else if (identifierEquals("CS")) {
+                } else if (lexer.identifierEquals("CS")) {
                     queryBlock.setIsolation(Isolation.CS);
-                } else if (identifierEquals("UR")) {
+                } else if (lexer.identifierEquals("UR")) {
                     queryBlock.setIsolation(Isolation.UR);
                 } else {
-                    throw new ParserException("TODO");
+                    throw new ParserException("TODO. " + lexer.info());
                 }
                 lexer.nextToken();
                 continue;
             }
-            
+
             if (lexer.token() == Token.FOR) {
                 lexer.nextToken();
-                
+
                 if (lexer.token() == Token.UPDATE) {
                     queryBlock.setForUpdate(true);
                     lexer.nextToken();
@@ -128,22 +142,22 @@ public class DB2SelectParser extends SQLSelectParser {
                     queryBlock.setForReadOnly(true);
                 }
             }
-            
+
             if (lexer.token() == Token.OPTIMIZE) {
                 lexer.nextToken();
                 accept(Token.FOR);
-                
+
                 queryBlock.setOptimizeFor(this.expr());
-                if (identifierEquals("ROW")) {
+                if (lexer.identifierEquals("ROW")) {
                     lexer.nextToken();
                 } else {
                     acceptIdentifier("ROWS");
                 }
             }
-            
+
             break;
         }
 
-        return queryRest(queryBlock);
+        return queryRest(queryBlock, acceptUnion);
     }
 }

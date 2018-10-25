@@ -1,5 +1,5 @@
 /*
- * Copyright 1999-2017 Alibaba Group Holding Ltd.
+ * Copyright 1999-2018 Alibaba Group Holding Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -57,8 +57,7 @@ public class OceanbaseCreateTableTest_rangePartition2 extends MysqlTest {
                     + "\n\tjob_code INT NOT NULL,"
                     + "\n\tstore_id INT NOT NULL"
                     + "\n)"
-                    + "\nPARTITION BY RANGE (store_id)"
-                    + "\n("
+                    + "\nPARTITION BY RANGE (store_id) ("
                     + "\n\tPARTITION p0 VALUES LESS THAN (6),"
                     + "\n\tPARTITION p1 VALUES LESS THAN (11),"
                     + "\n\tPARTITION p2 VALUES LESS THAN (16),"
@@ -77,8 +76,7 @@ public class OceanbaseCreateTableTest_rangePartition2 extends MysqlTest {
                     + "\n\tjob_code INT not null,"
                     + "\n\tstore_id INT not null"
                     + "\n)"
-                    + "\npartition by range (store_id)"
-                    + "\n("
+                    + "\npartition by range (store_id) ("
                     + "\n\tpartition p0 values less than (6),"
                     + "\n\tpartition p1 values less than (11),"
                     + "\n\tpartition p2 values less than (16),"

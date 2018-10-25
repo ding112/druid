@@ -1,5 +1,5 @@
 /*
- * Copyright 1999-2017 Alibaba Group Holding Ltd.
+ * Copyright 1999-2018 Alibaba Group Holding Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,6 +34,28 @@ public class SQLCommitStatement extends SQLStatementImpl {
     // sql server
     private SQLExpr transactionName;
     private SQLExpr delayedDurability;
+
+    public SQLCommitStatement() {
+
+    }
+
+    public SQLCommitStatement clone() {
+        SQLCommitStatement x = new SQLCommitStatement();
+        x.write = write;
+        x.wait = wait;
+        x.immediate = immediate;
+        x.work = work;
+        x.chain = chain;
+        x.release = release;
+
+        if(transactionName != null) {
+            x.setTransactionName(transactionName.clone());
+        }
+        if (delayedDurability != null) {
+            x.setDelayedDurability(delayedDurability.clone());
+        }
+        return x;
+    }
 
     public void accept0(SQLASTVisitor visitor) {
         if (visitor.visit(this)) {
