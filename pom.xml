@@ -163,38 +163,38 @@
 			</plugin>
 
 			<!-- http://code.google.com/p/maven-license-plugin/wiki/HowTo -->
-			<plugin>
-				<!-- Working with multi-module projects -->
-				<inherited>false</inherited>
-				<groupId>com.mycila.maven-license-plugin</groupId>
-				<artifactId>maven-license-plugin</artifactId>
-				<version>1.10.b1</version>
-				<configuration>
-					<header>${basedir}/doc/license.txt</header>
-					<failIfMissing>true</failIfMissing>
-					<aggregate>true</aggregate>
-					<strictCheck>true</strictCheck>
-					<properties>
-						<!-- <year>2012</year> -->
-					</properties>
-					<mapping>
-						<java>SLASHSTAR_STYLE</java>
-					</mapping>
-					<includes>
-						<include>src/main/java/**/*.java</include>
-					</includes>
-					<encoding>UTF-8</encoding>
-				</configuration>
-				<executions>
-					<execution>
-						<id>check-headers</id>
-						<phase>verify</phase>
-						<goals>
-							<goal>check</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
+			<!--<plugin>-->
+				<!--&lt;!&ndash; Working with multi-module projects &ndash;&gt;-->
+				<!--<inherited>false</inherited>-->
+				<!--<groupId>com.mycila.maven-license-plugin</groupId>-->
+				<!--<artifactId>maven-license-plugin</artifactId>-->
+				<!--<version>1.10.b1</version>-->
+				<!--<configuration>-->
+					<!--<header>${basedir}/doc/license.txt</header>-->
+					<!--<failIfMissing>true</failIfMissing>-->
+					<!--<aggregate>true</aggregate>-->
+					<!--<strictCheck>true</strictCheck>-->
+					<!--<properties>-->
+						<!--&lt;!&ndash; <year>2012</year> &ndash;&gt;-->
+					<!--</properties>-->
+					<!--<mapping>-->
+						<!--<java>SLASHSTAR_STYLE</java>-->
+					<!--</mapping>-->
+					<!--<includes>-->
+						<!--<include>src/main/java/**/*.java</include>-->
+					<!--</includes>-->
+					<!--<encoding>UTF-8</encoding>-->
+				<!--</configuration>-->
+				<!--<executions>-->
+					<!--<execution>-->
+						<!--<id>check-headers</id>-->
+						<!--<phase>verify</phase>-->
+						<!--<goals>-->
+							<!--<goal>check</goal>-->
+						<!--</goals>-->
+					<!--</execution>-->
+				<!--</executions>-->
+			<!--</plugin>-->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
@@ -561,8 +561,11 @@
 			<version>2.5.3</version>
 			<scope>provided</scope>
 		</dependency>
-
-
+		<dependency>
+			<groupId>org.springframework.vault</groupId>
+			<artifactId>spring-vault-core</artifactId>
+			<version>1.1.2.RELEASE</version>
+		</dependency>
 		<!--
 			test dependences
 		-->
