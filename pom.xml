@@ -89,6 +89,7 @@
 					<encoding>UTF-8</encoding>
 					<source>${jdk.version}</source>
 					<target>${jdk.version}</target>
+                    <skip>true</skip>
 				</configuration>
 			</plugin>
 
@@ -100,7 +101,8 @@
 					<includes>
 						<include>**/bvt/**/*.java</include>
 					</includes>
-				</configuration>
+                    <skip>true</skip>
+                </configuration>
 			</plugin>
 
 			<plugin>
@@ -161,38 +163,38 @@
 			</plugin>
 
 			<!-- http://code.google.com/p/maven-license-plugin/wiki/HowTo -->
-			<plugin>
-				<!-- Working with multi-module projects -->
-				<inherited>false</inherited>
-				<groupId>com.mycila.maven-license-plugin</groupId>
-				<artifactId>maven-license-plugin</artifactId>
-				<version>1.10.b1</version>
-				<configuration>
-					<header>${basedir}/doc/license.txt</header>
-					<failIfMissing>true</failIfMissing>
-					<aggregate>true</aggregate>
-					<strictCheck>true</strictCheck>
-					<properties>
-						<!-- <year>2012</year> -->
-					</properties>
-					<mapping>
-						<java>SLASHSTAR_STYLE</java>
-					</mapping>
-					<includes>
-						<include>src/main/java/**/*.java</include>
-					</includes>
-					<encoding>UTF-8</encoding>
-				</configuration>
-				<executions>
-					<execution>
-						<id>check-headers</id>
-						<phase>verify</phase>
-						<goals>
-							<goal>check</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
+			<!--<plugin>-->
+				<!--&lt;!&ndash; Working with multi-module projects &ndash;&gt;-->
+				<!--<inherited>false</inherited>-->
+				<!--<groupId>com.mycila.maven-license-plugin</groupId>-->
+				<!--<artifactId>maven-license-plugin</artifactId>-->
+				<!--<version>1.10.b1</version>-->
+				<!--<configuration>-->
+					<!--<header>${basedir}/doc/license.txt</header>-->
+					<!--<failIfMissing>true</failIfMissing>-->
+					<!--<aggregate>true</aggregate>-->
+					<!--<strictCheck>true</strictCheck>-->
+					<!--<properties>-->
+						<!--&lt;!&ndash; <year>2012</year> &ndash;&gt;-->
+					<!--</properties>-->
+					<!--<mapping>-->
+						<!--<java>SLASHSTAR_STYLE</java>-->
+					<!--</mapping>-->
+					<!--<includes>-->
+						<!--<include>src/main/java/**/*.java</include>-->
+					<!--</includes>-->
+					<!--<encoding>UTF-8</encoding>-->
+				<!--</configuration>-->
+				<!--<executions>-->
+					<!--<execution>-->
+						<!--<id>check-headers</id>-->
+						<!--<phase>verify</phase>-->
+						<!--<goals>-->
+							<!--<goal>check</goal>-->
+						<!--</goals>-->
+					<!--</execution>-->
+				<!--</executions>-->
+			<!--</plugin>-->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
@@ -559,8 +561,11 @@
 			<version>2.5.3</version>
 			<scope>provided</scope>
 		</dependency>
-
-
+		<dependency>
+			<groupId>org.springframework.vault</groupId>
+			<artifactId>spring-vault-core</artifactId>
+			<version>1.1.2.RELEASE</version>
+		</dependency>
 		<!--
 			test dependences
 		-->
@@ -617,18 +622,18 @@
 			<version>0.8.0.RELEASE</version>
 			<scope>test</scope>
 		</dependency>
-		<dependency>
-			<groupId>proxool</groupId>
-			<artifactId>proxool</artifactId>
-			<version>0.9.1</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>proxool</groupId>
-			<artifactId>proxool-cglib</artifactId>
-			<version>0.9.1</version>
-			<scope>test</scope>
-		</dependency>
+		<!--<dependency>-->
+			<!--<groupId>proxool</groupId>-->
+			<!--<artifactId>proxool</artifactId>-->
+			<!--<version>0.9.1</version>-->
+			<!--<scope>test</scope>-->
+		<!--</dependency>-->
+		<!--<dependency>-->
+			<!--<groupId>proxool</groupId>-->
+			<!--<artifactId>proxool-cglib</artifactId>-->
+			<!--<version>0.9.1</version>-->
+			<!--<scope>test</scope>-->
+		<!--</dependency>-->
 
 		<dependency>
 			<groupId>c3p0</groupId>
@@ -651,18 +656,18 @@
 			<scope>test</scope>
 		</dependency>
 
-		<dependency>
-			<groupId>com.taobao.tbdatasource</groupId>
-			<artifactId>tbdatasource</artifactId>
-			<version>2.0.2</version>
-			<scope>test</scope>
-			<exclusions>
-				<exclusion>
-					<groupId>jboss</groupId>
-					<artifactId>jboss-j2ee</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
+		<!--<dependency>-->
+			<!--<groupId>com.taobao.tbdatasource</groupId>-->
+			<!--<artifactId>tbdatasource</artifactId>-->
+			<!--<version>2.0.2</version>-->
+			<!--<scope>test</scope>-->
+			<!--<exclusions>-->
+				<!--<exclusion>-->
+					<!--<groupId>jboss</groupId>-->
+					<!--<artifactId>jboss-j2ee</artifactId>-->
+				<!--</exclusion>-->
+			<!--</exclusions>-->
+		<!--</dependency>-->
 
 		<dependency>
 			<groupId>org.javasimon</groupId>
