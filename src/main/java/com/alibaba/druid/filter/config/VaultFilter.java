@@ -29,13 +29,43 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.Properties;
 
+/**
+ * <pre>
+ * 这个类主要是负责vault解密
+ * [解密]
+ *
+ * DruidDataSource dataSource = new DruidDataSource();
+ * //dataSource.setXXX 其他设置
+ * //下面两步很重要
+ * //启用vault filter
+ * dataSource.setFilters("vault");
+ * //使用RSA解密(使用默认密钥）
+ * dataSource.setPassword("加密的密文");
+ *
+ * [Spring的配置解密]
+ *
+ * &lt;bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close"&gt;
+ *     &lt;property name="password" value="加密的密文" /&gt;
+ *     &lt;!-- 其他的属性设置 --&gt;
+ *     &lt;property name="filters" value="vault" /&gt;
+ * &lt;/bean&gt;
+ *
+ * vault.gateway=vault网关
+ * vault.auth.type=客户端认证方式
+ * vault.auth.token=token认证所需的认证
+ * vault.encryption.key=加密用key
+ *
+ * </pre>
+ *
+ * @author Ding Yili
+ */
 public class VaultFilter extends FilterAdapter {
     private static Log LOG = LogFactory.getLog(VaultFilter.class);
 
     public static final String VAULT_GATEWAY = "vault.gateway";
-    public static final String VAULT_AUTHTYPE = "vault.authType";
-    public static final String VAULT_TOKEN = "vault.token";
-    public static final String VAULT_DECRYPTPATH = "vault.decryptPath";
+    public static final String VAULT_AUTH_TYPE = "vault.auth.type";
+    public static final String VAULT_AUTH_TOKEN = "vault.auth.token";
+    public static final String VAULT_ENCRYPTION_KEY = "vault.encryption.key";
 
     public VaultFilter() {
     }
@@ -57,11 +87,11 @@ public class VaultFilter extends FilterAdapter {
         try {
             String encryptedPassword = dataSource.getPassword();
             String gateway = info.getProperty(VAULT_GATEWAY);
-            String authType = info.getProperty(VAULT_AUTHTYPE);
-            String token = info.getProperty(VAULT_TOKEN);
-            String decryptPath = info.getProperty(VAULT_DECRYPTPATH);
+            String authType = info.getProperty(VAULT_AUTH_TYPE);
+            String token = info.getProperty(VAULT_AUTH_TOKEN);
+            String encryptionKey = info.getProperty(VAULT_ENCRYPTION_KEY);
 
-            String passwordPlainText = new VaultTools(gateway, authType, decryptPath, token).decrypt(encryptedPassword);
+            String passwordPlainText = new VaultTools(gateway, authType, encryptionKey, token).decrypt(encryptedPassword);
 
             if (info != null) {
                 info.setProperty(DruidDataSourceFactory.PROP_PASSWORD, passwordPlainText);
