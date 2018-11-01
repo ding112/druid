@@ -73,13 +73,12 @@ public class VaultFilter extends FilterAdapter {
         }
     }
 
-    Properties loadPropertyFromConfigFile(Properties connectionProperties) {
+    private Properties loadPropertyFromConfigFile(Properties connectionProperties) {
         String configFile = "classpath:vault.properties";
         Properties info = loadConfig(configFile);
 
         if (info == null) {
-            throw new IllegalArgumentException("Cannot load remote config file from the [config.file=" + configFile
-                    + "].");
+            throw new IllegalArgumentException("Cannot load remote config file from the [config.file=" + configFile + "].");
         }
         return info;
     }
