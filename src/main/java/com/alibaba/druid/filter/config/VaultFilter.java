@@ -27,6 +27,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.sql.SQLException;
 import java.util.Properties;
 
 /**
@@ -80,6 +81,12 @@ public class VaultFilter extends FilterAdapter {
         Properties configFileProperties = loadPropertyFromConfigFile(connectionProperties);
 
         decrypt(dataSource, configFileProperties);
+
+        try {
+            DruidDataSourceFactory.config(dataSource, configFileProperties);
+        } catch (SQLException e) {
+            throw new IllegalArgumentException("Config DataSource error.", e);
+        }
     }
 
     public void decrypt(DruidDataSource dataSource, Properties info) {
