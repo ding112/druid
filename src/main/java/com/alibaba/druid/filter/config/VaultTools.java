@@ -85,6 +85,8 @@ public class VaultTools {
     }
 
     private SslConfiguration prepareCertAuthenticationMethod() {
+        checkNotNull(keyStore,"客户端TLS证书路径不能为空");
+        checkNotNull(keyStorePassword,"客户端TLS证书密码不能为空");
         return SslConfiguration.forKeyStore(new FileSystemResource(new File(keyStore)), keyStorePassword.toCharArray());
     }
 
