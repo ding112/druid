@@ -735,9 +735,9 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>com.winbaoxian</groupId>
-			<artifactId>wy-apollo-client</artifactId>
-			<version>1.0.3</version>
+			<groupId>com.ctrip.framework.apollo</groupId>
+			<artifactId>apollo-client</artifactId>
+			<version>1.4.1</version>
 		</dependency>
 	</dependencies>
 </project>
