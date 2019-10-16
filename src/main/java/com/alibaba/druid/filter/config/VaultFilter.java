@@ -22,6 +22,9 @@ import com.alibaba.druid.proxy.jdbc.DataSourceProxy;
 import com.alibaba.druid.support.logging.Log;
 import com.alibaba.druid.support.logging.LogFactory;
 import com.alibaba.druid.util.JdbcUtils;
+import com.ctrip.framework.apollo.Config;
+import com.ctrip.framework.apollo.ConfigService;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -63,6 +66,9 @@ import java.util.Properties;
 public class VaultFilter extends FilterAdapter {
     private static Log LOG = LogFactory.getLog(VaultFilter.class);
 
+    public static final String CONFIG_APOLLO = "config.apollo";
+    public static final String CLASSPATH_VAULT_PROPERTIES = "classpath:vault.properties";
+
     public static final String VAULT_GATEWAY = "vault.gateway";
     public static final String VAULT_AUTH_TYPE = "vault.auth.type";
     public static final String VAULT_AUTH_TOKEN = "vault.auth.token";
@@ -71,6 +77,7 @@ public class VaultFilter extends FilterAdapter {
     public VaultFilter() {
     }
 
+    @Override
     public void init(DataSourceProxy dataSourceProxy) {
         if (!(dataSourceProxy instanceof DruidDataSource)) {
             LOG.error("ConfigLoader only support DruidDataSource");
@@ -111,13 +118,27 @@ public class VaultFilter extends FilterAdapter {
     }
 
     private Properties loadPropertyFromConfigFile(Properties connectionProperties) {
-        String configFile = "classpath:vault.properties";
+        String apolloNamespace = connectionProperties.getProperty(CONFIG_APOLLO);
+        if (StringUtils.isNotBlank(apolloNamespace)) {
+            Config config = ConfigService.getConfig(apolloNamespace);
+            Properties info = loadConfig(config);
+            return info;
+        }
+        String configFile = CLASSPATH_VAULT_PROPERTIES;
         Properties info = loadConfig(configFile);
 
         if (info == null) {
             throw new IllegalArgumentException("Cannot load remote config file from the [config.file=" + configFile + "].");
         }
         return info;
+    }
+
+    private Properties loadConfig(Config config) {
+        Properties properties = new Properties();
+        for (String propertyName : config.getPropertyNames()) {
+            properties.setProperty(propertyName, config.getProperty(propertyName, ""));
+        }
+        return properties;
     }
 
     public Properties loadConfig(String filePath) {
